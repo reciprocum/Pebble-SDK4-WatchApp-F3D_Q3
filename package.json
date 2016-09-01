@@ -1,0 +1,29 @@
+{
+    "author": "reciprocum@gmail.com",
+    "dependencies": {
+        "karambola": "https://builds.cloudpebble.net/149e8461-a59c-4885-84e8-85f780c46dd0/package.tar.gz"
+    },
+    "keywords": [],
+    "name": "cubeq3test",
+    "pebble": {
+        "displayName": "CubeQ3test",
+        "enableMultiJS": true,
+        "messageKeys": [],
+        "projectType": "native",
+        "resources": {
+            "media": []
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "chalk",
+            "diorite"
+        ],
+        "uuid": "65f35499-5e46-43e9-81df-49dd138b9dad",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "1.0.0"
+}
