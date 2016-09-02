@@ -1,12 +1,12 @@
 {
-    "author": "reciprocum@gmail.com",
+    "author": "Karambola",
     "dependencies": {
-        "karambola": "https://builds.cloudpebble.net/149e8461-a59c-4885-84e8-85f780c46dd0/package.tar.gz"
+        "karambola": "https://builds.cloudpebble.net/0150122d-18d3-4351-9109-1e6d48fac8c7/package.tar.gz"
     },
     "keywords": [],
     "name": "cubeq3test",
     "pebble": {
-        "displayName": "CubeQ3test",
+        "displayName": "F3D Q3",
         "enableMultiJS": true,
         "messageKeys": [],
         "projectType": "native",

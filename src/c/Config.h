@@ -1,9 +1,9 @@
 /*
-   Project: CubeQ3test (watchapp)
-   File   : Config.h
-   Author : Afonso Santos, Portugal
+   WatchApp: F3D Q3
+   File    : Config.h
+   Author  : Afonso Santos, Portugal
 
-   Last revision: 12h54 August 30 2016
+   Last revision: 17h34 September 01 2016
 */
 
 #pragma once
