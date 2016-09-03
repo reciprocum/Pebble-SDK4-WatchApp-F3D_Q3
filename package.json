@@ -1,7 +1,7 @@
 {
     "author": "Karambola",
     "dependencies": {
-        "karambola": "https://builds.cloudpebble.net/0150122d-18d3-4351-9109-1e6d48fac8c7/package.tar.gz"
+        "karambola": "https://builds.cloudpebble.net/12b9ec75-a4be-4ad8-86be-3ca438365233/package.tar.gz"
     },
     "keywords": [],
     "name": "cubeq3test",

@@ -43,8 +43,8 @@ Sampler   *sampler_accelZ = NULL ;            // To be allocated at world_initia
 
 static CamQ3   s_cam ;
 static Q       s_cam_zoom        = PBL_IF_RECT_ELSE(Q_from_float(1.25f), Q_from_float(1.15f)) ;
-static Q       s_cam_rotZrad     = Q_0 ;
-static Q       s_cam_rotZstepRad ;
+static int32_t s_cam_rotZangle   = 0 ;
+static int32_t s_cam_rotZstepAngle ;
 
 // Acellerometer handlers.
 void
@@ -62,16 +62,16 @@ void  world_finalize( ) ;
 
 void
 cam_config
-( const Q3 *pViewPoint
-, const Q   pRotZrad
+( const Q3      *pViewPoint
+, const int32_t  pRotZangle
 )
 {
   Q3 scaledVP ;
   Q3_scaTo( &scaledVP, CAM3D_DISTANCEFROMORIGIN, pViewPoint ) ;
 
   Q3 rotatedVP ;
-  Q3_rotZrad( &rotatedVP, &scaledVP, pRotZrad ) ;
-  
+  Q3_rotZ( &rotatedVP, &scaledVP, pRotZangle ) ;
+
   // setup 3D camera
   CamQ3_lookAtOriginUpwards( &s_cam, &rotatedVP, s_cam_zoom, CAM_PROJECTION_PERSPECTIVE ) ;
 }
@@ -100,11 +100,11 @@ world_initialize
 {
   sampler_initialize( ) ;
 
-  Q halfScale  = gridXY_scale >> 1 ;   // scale / 2
-  int gridXY_numStripes = GRID_XY_LINES - 1 ;
-  Q gridStep = Q_div( gridXY_scale, Q_from_int(gridXY_numStripes) ) ;
-  Q x        = -halfScale ;
-   
+  Q halfScale         = gridXY_scale >> 1 ;   // scale / 2
+  Q gridXY_numStripes = Q_from_int(GRID_XY_LINES - 1) ;
+  Q gridStep          = Q_div( gridXY_scale, gridXY_numStripes ) ;
+  Q x                 = -halfScale ;
+
   for (int i = 0  ;  i < GRID_XY_LINES  ;  ++i)
   {
     Q y = -halfScale ;
@@ -118,15 +118,17 @@ world_initialize
       
       Q dist2 = Q_mul(x, x) + Q_mul(y, y) ;
       Q dist  = Q_sqrt(dist2) ;
-      fxy[i][j].z = Q_cosRad( dist ) ;
+      int32_t angle = (dist >> 1) & 0xFFFF ;
+      fxy[i][j].z = cos_lookup( angle ) ;
+//    fxy[i][j].z = Q_cosRad( dist ) ;
     }
 
     x += gridStep ;
   }
 
   // Initialize cam rotation constants.
-  s_cam_rotZrad     = Q_0 ;
-  s_cam_rotZstepRad = Q_div( Q_PI, Q_from_int(100) ) ;
+  s_cam_rotZangle     = 0 ;
+  s_cam_rotZstepAngle = TRIG_MAX_ANGLE / 512 ;
 }
 
 
@@ -177,11 +179,12 @@ world_update
     viewPoint.y = Q_from_float( avgY ) ;
     viewPoint.z = Q_from_float( avgZ ) ;
       
-    s_cam_rotZrad += s_cam_rotZstepRad ;
-    cam_config( &viewPoint, s_cam_rotZrad ) ;
+    s_cam_rotZangle += s_cam_rotZstepAngle ;
+    s_cam_rotZangle &= 0xFFFF ;        // Keep angle normalized.
+    cam_config( &viewPoint, s_cam_rotZangle ) ;
   }
 
-  // this will queue a defered call to the world_draw( ) method.
+  // this will queue a defered call to the world_draw( ) method. (% 2PI)
   layer_mark_dirty( s_world_layer ) ;
 }
 
